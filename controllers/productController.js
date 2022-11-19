@@ -25,10 +25,35 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 const getAllProducts = asyncHandler(async (req, res) => {
-	const products = await Product.find().sort("-createdAt");
+	const pageSize = 10;
+	const page = Number(req.query.pageNumber) || 1;
+	const q = req.query.q
+		? {
+				name: {
+					$regex: req.query.q,
+					$options: "i",
+				},
+		  }
+		: {};
+
+	const category = req.query.category
+		? {
+				category: {
+					$regex: req.query.category,
+					$options: "i",
+				},
+		  }
+		: {};
+
+	//Get numbe of products
+	const count = await Product.count({ ...q, ...category });
+	const products = await Product.find({ ...q, ...category })
+		.sort("-createdAt")
+		.limit(pageSize)
+		.skip(pageSize * (page - 1));
 
 	if (products) {
-		res.json(products);
+		res.json({ products, page, pages: Math.ceil(count / pageSize) });
 	} else {
 		res.status(400);
 		throw new Error("No products found");
