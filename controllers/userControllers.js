@@ -99,4 +99,14 @@ const loginStatus = asyncHandler(async (req, res) => {
 	}
 });
 
-export { getUserData, loginStatus, updateUserData, changePassword };
+const sumFunction = (a, b) => {
+	return a + b;
+};
+
+export {
+	getUserData,
+	loginStatus,
+	updateUserData,
+	changePassword,
+	sumFunction,
+};

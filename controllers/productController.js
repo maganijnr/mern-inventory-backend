@@ -60,6 +60,17 @@ const getAllProducts = asyncHandler(async (req, res) => {
 	}
 });
 
+const getTotalProducts = asyncHandler(async (req, res) => {
+	const products = await Product.find().sort("-createdAt");
+
+	if (products) {
+		res.json(products);
+	} else {
+		res.status(400);
+		throw new Error("No products found");
+	}
+});
+
 const getProductById = asyncHandler(async (req, res) => {
 	const productId = req.params.id;
 
@@ -108,4 +119,5 @@ export {
 	getProductById,
 	deleteProduct,
 	updateProduct,
+	getTotalProducts,
 };
