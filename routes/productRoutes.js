@@ -4,7 +4,6 @@ import {
 	deleteProduct,
 	getAllProducts,
 	getProductById,
-	getTotalProducts,
 	updateProduct,
 } from "../controllers/productController.js";
 import { protect } from "../middleware/authMiddlewareHandler.js";
