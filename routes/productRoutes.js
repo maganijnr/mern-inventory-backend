@@ -13,7 +13,6 @@ import { upload } from "../utils/fileUpload.js";
 const router = express.Router();
 
 router.route("/").post(protect, createProduct).get(getAllProducts);
-router.route("/totalProducts").get(getTotalProducts);
 router
 	.route("/:id")
 	.get(protect, getProductById)

@@ -25,8 +25,6 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 const getAllProducts = asyncHandler(async (req, res) => {
-	const pageSize = 10;
-	const page = Number(req.query.pageNumber) || 1;
 	const q = req.query.q
 		? {
 				name: {
@@ -45,23 +43,10 @@ const getAllProducts = asyncHandler(async (req, res) => {
 		  }
 		: {};
 
-	//Get numbe of products
-	const count = await Product.count({ ...q, ...category });
 	const products = await Product.find({ ...q, ...category })
 		.sort("-createdAt")
 		.limit(pageSize)
 		.skip(pageSize * (page - 1));
-
-	if (products) {
-		res.json({ products, page, pages: Math.ceil(count / pageSize) });
-	} else {
-		res.status(400);
-		throw new Error("No products found");
-	}
-});
-
-const getTotalProducts = asyncHandler(async (req, res) => {
-	const products = await Product.find().sort("-createdAt");
 
 	if (products) {
 		res.json(products);
@@ -119,5 +104,4 @@ export {
 	getProductById,
 	deleteProduct,
 	updateProduct,
-	getTotalProducts,
 };
