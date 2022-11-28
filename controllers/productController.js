@@ -43,10 +43,9 @@ const getAllProducts = asyncHandler(async (req, res) => {
 		  }
 		: {};
 
-	const products = await Product.find({ ...q, ...category })
-		.sort("-createdAt")
-		.limit(pageSize)
-		.skip(pageSize * (page - 1));
+	const products = await Product.find({ ...q, ...category }).sort(
+		"-createdAt"
+	);
 
 	if (products) {
 		res.json(products);
