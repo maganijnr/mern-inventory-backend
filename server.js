@@ -10,7 +10,6 @@ import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import path from "path";
-import * as Cloudinary from "cloudinary";
 
 dotenv.config();
 const app = express();
@@ -18,11 +17,12 @@ const app = express();
 //Middleware
 app.use(
 	cors({
-		origin: ["http://localhost:3000", "https://eubond-admin.vercel.app/"],
+		origin: ["http://localhost:3000", "https://eubond-admin.vercel.app"],
 		credentials: true,
 	})
 );
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
@@ -52,4 +52,3 @@ const startServer = async () => {
 };
 
 startServer();
-// export { server };
