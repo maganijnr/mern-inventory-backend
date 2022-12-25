@@ -18,7 +18,7 @@ const app = express();
 //Middleware
 app.use(
 	cors({
-		origin: ["http://localhost:3000", "https://eubond-mern-admin"],
+		origin: ["http://localhost:3000", "https://eubond-admin.vercel.app/"],
 		credentials: true,
 	})
 );
