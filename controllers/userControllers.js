@@ -15,6 +15,7 @@ const updateUserData = asyncHandler(async (req, res) => {
 		user.photo = req.body.photo || photo;
 		user.bio = req.body.bio || bio;
 
+		//Update user
 		const updateUser = await user.save();
 
 		res.json({
