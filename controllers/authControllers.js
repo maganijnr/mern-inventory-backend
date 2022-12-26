@@ -63,6 +63,7 @@ const registerUser = asyncHandler(async (req, res) => {
 			email: createdUser.email,
 			bio: createdUser.bio,
 			photo: createdUser.photo,
+			isAdmin: createdUser.isAdmin,
 			token: token,
 		});
 	}
@@ -113,6 +114,7 @@ const loginUser = asyncHandler(async (req, res) => {
 			email: userExist.email,
 			bio: userExist.bio,
 			photo: userExist.photo,
+			isAdmin: userExist.isAdmin,
 			token: token,
 		});
 	} else {

@@ -6,18 +6,15 @@ import {
 	getProductById,
 	updateProduct,
 } from "../controllers/productController.js";
-import { protect } from "../middleware/authMiddlewareHandler.js";
-import { upload } from "../utils/fileUpload.js";
+import { protect, verifyAdmin } from "../middleware/authMiddlewareHandler.js";
 
 const router = express.Router();
 
-router.route("/").post(protect, createProduct).get(getAllProducts);
+router.route("/").post(verifyAdmin, createProduct).get(getAllProducts);
 router
 	.route("/:id")
 	.get(protect, getProductById)
-	.delete(protect, deleteProduct)
-	.patch(protect, updateProduct);
+	.delete(verifyAdmin, deleteProduct)
+	.patch(verifyAdmin, updateProduct);
 
 export default router;
-
-//upload.array("image")

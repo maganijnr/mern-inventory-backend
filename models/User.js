@@ -32,6 +32,10 @@ const userModel = mongoose.Schema(
 			type: String,
 			maxLength: 300,
 		},
+		isAdmin: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true }
 );
