@@ -28,9 +28,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-const __dirname = path.resolve();
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
-
 //Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
@@ -38,6 +35,9 @@ app.use("/api/products", productRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
+
+const __dirname = path.resolve();
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 //Error
 app.use(errorHandler);
