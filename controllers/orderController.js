@@ -1,74 +1,131 @@
-import Order from "../models/Order.js";
-import asyncHandler from "express-async-handler";
+import Order from '../models/Order.js'
+import asyncHandler from 'express-async-handler'
 
 const getAllOrders = asyncHandler(async (req, res) => {
-	const orders = await Order.find();
+  const orders = await Order.find()
 
-	if (orders) {
-		res.status(201).json(orders);
-	} else {
-		res.status(400);
-		throw new Error("No orders");
-	}
-});
+  if (orders) {
+    res.status(201).json(orders)
+  } else {
+    res.status(400)
+    throw new Error('No orders')
+  }
+})
 
-const createOrder = asyncHandler(async (req, res) => {
-	const newOrderItem = new Order(req.body);
+const addOrderItems = asyncHandler(async (req, res) => {
+  const {
+    orderItems,
+    shippingAddress,
+    paymentMethod,
+    itemsPrice,
+    shippingFee,
+    taxPrice,
+    totalPrice,
+  } = req.body
 
-	const savedOrderItem = await newOrderItem.save();
+  if (orderItems && orderItems.length === 0) {
+    res.status(400)
+    throw new Error('No items to create order')
+  } else {
+    const newOrder = new Order({
+      user: req.user._id,
+      orderItems,
+      shippingAddress,
+      paymentMethod,
+      itemsPrice,
+      shippingFee,
+      taxPrice,
+      totalPrice,
+    })
 
-	if (savedOrderItem) {
-		res.status(201).json(savedOrderItem);
-	} else {
-		res.status(400);
-		throw new Error("Unable to create order");
-	}
-});
+    const saveOrder = await newOrder.save()
+
+    if (saveOrder) {
+      return res.status(201).json({ message: 'Order created successfully' })
+    } else {
+      res.status(400)
+      throw new Error("Can't create order")
+    }
+  }
+})
 
 const getUserOrder = asyncHandler(async (req, res) => {
-	const userId = req.params.id;
+  const userOrders = await Order.find({ user: req.user._id })
 
-	const userOrder = await Order.findOne({ userId });
+  if (!userOrders || userOrders.length === 0) {
+    res.status(400)
+    throw new Error('No orders available')
+  } else {
+    return res.status(200).json({ orders: userOrders })
+  }
+})
 
-	if (userOrder) {
-		res.status(201).json(userOrder);
-	} else {
-		res.status(400);
-		throw new Error("No order Found");
-	}
-});
+const getSpecificUserOrder = asyncHandler(async (req, res) => {
+  const { orderId } = req.params
 
+  const order = await Order.findById(orderId)
+
+  if (!order) {
+    res.status(400)
+    throw new Error('No order found')
+  } else {
+    return res.status(200).json({ order: order })
+  }
+})
+
+const deleteSpecificOrder = asyncHandler(async (req, res) => {
+  const { orderId } = req.params
+
+  const deleteOrder = await Order.findByIdAndDelete(orderId)
+
+  if (deleteOrder) {
+    return res.status(200).json({ message: 'Order deleted successfully' })
+  } else {
+    res.status(400)
+    throw new Error('Order does not exist')
+  }
+})
+
+//Admin order routes
 const deleteOrder = asyncHandler(async (req, res) => {
-	const orderId = req.params.id;
+  const orderId = req.params.id
 
-	const order = await Order.findByIdAndDelete(orderId);
+  const order = await Order.findByIdAndDelete(orderId)
 
-	if (order) {
-		res.json("Order deleted successfully");
-	} else {
-		res.status(400);
-		throw new Error("Order does not exist");
-	}
-});
+  if (order) {
+    res.json('Order deleted successfully')
+  } else {
+    res.status(400)
+    throw new Error('Order does not exist')
+  }
+})
 
 const updateOrder = asyncHandler(async (req, res) => {
-	const orderId = req.params.id;
+  const orderId = req.params.id
 
-	const updatedOrder = await Order.findByIdAndUpdate(
-		{ _id: orderId },
-		req.body,
-		{
-			new: true,
-			runValidators: true,
-		}
-	);
+  const updatedOrder = await Order.findByIdAndUpdate(
+    { _id: orderId },
+    req.body,
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
 
-	if (updatedOrder) {
-		res.status(200).json("Order updated successfully");
-	} else {
-		res.status(400);
-		throw new Error("Order not found");
-	}
-});
+  if (updatedOrder) {
+    res.status(200).json('Order updated successfully')
+  } else {
+    res.status(400)
+    throw new Error('Order not found')
+  }
+})
 
-export { createOrder, getAllOrders, getUserOrder, updateOrder, deleteOrder };
+export {
+  addOrderItems,
+  getAllOrders,
+  getUserOrder,
+  updateOrder,
+  deleteOrder,
+  getSpecificUserOrder,
+  deleteSpecificOrder,
+}

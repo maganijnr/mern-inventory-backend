@@ -1,20 +1,29 @@
-import express from "express";
+import express from 'express'
 import {
-	createOrder,
-	deleteOrder,
-	getAllOrders,
-	getUserOrder,
-	updateOrder,
-} from "../controllers/orderController.js";
-import { protect, verifyAdmin } from "../middleware/authMiddlewareHandler.js";
+  addOrderItems,
+  deleteOrder,
+  getAllOrders,
+  getSpecificUserOrder,
+  deleteSpecificOrder,
+  getUserOrder,
+  updateOrder,
+} from '../controllers/orderController.js'
+import { protect, verifyAdmin } from '../middleware/authMiddlewareHandler.js'
 
-const router = express.Router();
+const router = express.Router()
 
-router.route("/").post(protect, createOrder).get(verifyAdmin, getAllOrders);
+router.route('/').post(protect, addOrderItems).get(protect, getUserOrder)
 router
-	.route("/:id")
-	.get(protect, getUserOrder)
-	.patch(protect, updateOrder)
-	.delete(protect, deleteOrder);
+  .route('/:orderId')
+  .get(protect, getSpecificUserOrder)
+  .delete(protect, deleteSpecificOrder)
 
-export default router;
+router
+  .route('/:id')
+  .patch(protect, updateOrder)
+  .delete(verifyAdmin, deleteOrder)
+
+//admin routes
+router.route('/allOrders').get(verifyAdmin, getAllOrders)
+
+export default router
