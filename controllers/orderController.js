@@ -41,7 +41,9 @@ const addOrderItems = asyncHandler(async (req, res) => {
     const saveOrder = await newOrder.save()
 
     if (saveOrder) {
-      return res.status(201).json({ message: 'Order created successfully' })
+      return res
+        .status(201)
+        .json({ message: 'Order created successfully', order: saveOrder })
     } else {
       res.status(400)
       throw new Error("Can't create order")
